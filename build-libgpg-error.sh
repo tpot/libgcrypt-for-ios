@@ -21,7 +21,7 @@
 ###########################################################################
 #  Change values here
 #
-VERSION="1.12"
+VERSION="1.27"
 #
 ###########################################################################
 #
@@ -55,6 +55,7 @@ do
 	echo "Building libgpg-error for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 	echo "Please stand by..."
 	tar zxf libgpg-error-${VERSION}.tar.gz -C src
+	QUILT_PATCHES=patches/libgpg-error quilt push -a -q
 	cd src/libgpg-error-${VERSION}
 
 	export BUILD_DEVROOT="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer"
@@ -85,6 +86,7 @@ do
 	make >> "${LOG}" 2>&1
 	make install >> "${LOG}" 2>&1
 	cd ${CURRENTPATH}
+	QUILT_PATCHES=patches/libgpg-error quilt pop -a -q
 	rm -rf src/libgpg-error-${VERSION}
 	
 done

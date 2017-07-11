@@ -1,0 +1,14 @@
+Index: libgcrypt-for-ios/src/libgpg-error-1.27/src/mkheader.c
+===================================================================
+--- libgcrypt-for-ios.orig/src/libgpg-error-1.27/src/mkheader.c
++++ libgcrypt-for-ios/src/libgpg-error-1.27/src/mkheader.c
+@@ -91,6 +91,9 @@ canon_host_triplet (const char *triplet)
+     {"armv5-unknown-linux-musleabi"   },
+     {"armv6-unknown-linux-musleabihf" },
+ 
++    {"armv7-apple-darwin", "arm-apple-darwin" },
++    {"armv7s-apple-darwin" },
++
+     { NULL }
+   };
+   int i;
