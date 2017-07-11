@@ -21,7 +21,7 @@
 ###########################################################################
 #  Change values here
 #
-VERSION="1.5.3"
+VERSION="1.7.8"
 #
 ###########################################################################
 #
@@ -68,16 +68,10 @@ do
 	mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
 	LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk/build-libgcrypt-${VERSION}.log"
 
-	echo "Patching libgcrypt to compile with iOS-SDK..."
-	echo "@see http://www.telesphoreo.org/browser/trunk/data/gcrypt/armasm.diff"
-	PATCHFILE=`find ../.. | grep "armasm.diff"`
-	echo "Using: ${PATCHFILE}"
-	patch -p0 < $PATCHFILE >> "${LOG}" 2>&1
-	echo "Patching done."
-
 	export DEVROOT="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer"
 	export SDKROOT="${DEVROOT}/SDKs/${PLATFORM}${SDKVERSION}.sdk"
 	export CC=${DEVELOPER}/usr/bin/gcc
+	export CC_FOR_BUILD="env -i /usr/bin/gcc"
 	export LD=${DEVELOPER}/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld
 	export CXX=${DEVELOPER}/usr/bin/g++
 	export AR=${DEVELOPER}/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar
@@ -98,12 +92,12 @@ do
 	
 	if [ "${ARCH}" == "i386" ];
 	then
-		./configure --host=${HOST}-apple-darwin --prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-shared --enable-static --with-gpg-error-prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-aesni-support >> "${LOG}" 2>&1
+		./configure --disable-asm --host=${HOST}-apple-darwin --prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-shared --enable-static --with-gpg-error-prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-aesni-support >> "${LOG}" 2>&1
 	elif [ "${ARCH}" == "x86_64" ];
 	then
-			./configure --host=${HOST}-apple-darwin --prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-shared --enable-static --with-gpg-error-prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-aesni-support --disable-asm >> "${LOG}" 2>&1
+			./configure --disable-asm --host=${HOST}-apple-darwin --prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-shared --enable-static --with-gpg-error-prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-aesni-support --disable-asm >> "${LOG}" 2>&1
 	else
-		./configure --host=${HOST}-apple-darwin --prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-shared --enable-static --with-gpg-error-prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" >> "${LOG}" 2>&1
+		./configure --disable-asm --host=${HOST}-apple-darwin --prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" --disable-shared --enable-static --with-gpg-error-prefix="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" >> "${LOG}" 2>&1
 	fi
 
 	make >> "${LOG}" 2>&1
