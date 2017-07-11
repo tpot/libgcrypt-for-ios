@@ -55,8 +55,10 @@ do
 	echo "Building libgpg-error for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 	echo "Please stand by..."
 	tar zxf libgpg-error-${VERSION}.tar.gz -C src
-	QUILT_PATCHES=patches/libgpg-error quilt push -a -q
 	cd src/libgpg-error-${VERSION}
+
+	PATCHFILE=`find ../.. | grep "mkheader-armv7.patch"`
+	patch -p3 < $PATCHFILE
 
 	export BUILD_DEVROOT="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer"
 	export BUILD_SDKROOT="${BUILD_DEVROOT}/SDKs/${PLATFORM}${SDKVERSION}.sdk"
@@ -86,7 +88,6 @@ do
 	make >> "${LOG}" 2>&1
 	make install >> "${LOG}" 2>&1
 	cd ${CURRENTPATH}
-	QUILT_PATCHES=patches/libgpg-error quilt pop -a -q
 	rm -rf src/libgpg-error-${VERSION}
 	
 done
